@@ -20,7 +20,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      result : null,
+      result: null,
       searchTerm: DEFAULT_QUERY,
     };
 
@@ -29,103 +29,105 @@ class App extends Component {
     this.onSearchChange = this.onSearchChange.bind(this);
   }
 
-  setSearchTopStories(result){
-    this.setState({result});
+  setSearchTopStories(result) {
+    this.setState({ result });
   }
 
-  componentDidMount(){
-    const {searchTerm} = this.state;
+  componentDidMount() {
+    const { searchTerm } = this.state;
 
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
-    .then(response => response.json())
-    .then(result => this.setSearchTopStories(result))
-    .catch(error => error);
+      .then(response => response.json())
+      .then(result => this.setSearchTopStories(result))
+      .catch(error => error);
   }
 
   onDismiss(id) {
     const isNotId = item => item.objectID !== id;
     const updatedHits = this.state.result.hits.filter(isNotId);
-    this.setState({ 
-      result: {...this.state.result,  hits: updatedHits} 
+    this.setState({
+      result: { ...this.state.result, hits: updatedHits }
     });
   }
 
   onSearchChange(event) {
     this.setState({ searchTerm: event.target.value });
-    
+
   }
 
   render() {
     const { searchTerm, result } = this.state;
-    
-    if(!result){return null;}
+
+    if (!result) { return null; }
 
     return (
       <div className="page">
         <div className="interactions">
-        <Search
-          onChange={this.onSearchChange}
-          value={searchTerm}>
-          Search
+          <Search
+            onChange={this.onSearchChange}
+            value={searchTerm}>
+            Search
           </Search>
+        </div>
+        {result ?
+          <Table
+            list={result.hits}
+            pattern={searchTerm}
+            onDismiss={this.onDismiss} />
+          : null}
           </div>
-        <Table
-          list={result.hits}
-          pattern={searchTerm}
-          onDismiss={this.onDismiss} />
-      </div>
     );
   }
 }
 
-const Search = ({value, onChange, children}) =>
-      <form>
-        {children}
-        <input
-          type="text"
-          onChange={onChange}
-          value={value}>
-        </input>
-      </form>
+const Search = ({ value, onChange, children }) =>
+  <form>
+    {children}
+    <input
+      type="text"
+      onChange={onChange}
+      value={value}>
+    </input>
+  </form>
 
 const largeColumn = { width: '40%', };
 const midColumn = { width: '30%', };
 const smallColumn = { width: '10%', };
 
 
-const Table  = ({list, pattern, onDismiss}) =>
-      <div className = "table">
-        {list.filter(isSearched(pattern)).map(item =>
-          <div key={item.objectID} className="table-row">
-            <span style={ largeColumn }> 
-            <a href={item.url}>{item.title}</a></span>
+const Table = ({ list, pattern, onDismiss }) =>
+  <div className="table">
+    {list.filter(isSearched(pattern)).map(item =>
+      <div key={item.objectID} className="table-row">
+        <span style={largeColumn}>
+          <a href={item.url}>{item.title}</a></span>
 
-            <span style={ midColumn }> 
-            {item.author}</span>
+        <span style={midColumn}>
+          {item.author}</span>
 
-            <span style={ smallColumn }> 
-            {item.num_comments}</span>
+        <span style={smallColumn}>
+          {item.num_comments}</span>
 
-            <span style={ smallColumn }> 
-            {item.points}</span>
+        <span style={smallColumn}>
+          {item.points}</span>
 
-            <span style={ smallColumn }> 
-              <Button onClick={() => onDismiss(item.objectID)}
-                type="button"
-                className="button-inline">
-                Dismiss
+        <span style={smallColumn}>
+          <Button onClick={() => onDismiss(item.objectID)}
+            type="button"
+            className="button-inline">
+            Dismiss
               </Button>
-            </span>
-          </div>
-        )}
+        </span>
       </div>
+    )}
+  </div>
 
-const Button = ({onClick, className, children}) =>
-      <button
-        onClick={onClick}
-        className={className}
-        type="button">
-        {children}
-      </button>
+const Button = ({ onClick, className, children }) =>
+  <button
+    onClick={onClick}
+    className={className}
+    type="button">
+    {children}
+  </button>
 
 export default App;
