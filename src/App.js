@@ -140,7 +140,7 @@ class App extends Component {
   }
 }
 
-const Search = ({ value, onChange, onSubmit, children }) =>
+export const Search = ({ value, onChange, onSubmit, children }) =>
   <form onSubmit={onSubmit}>
     <input
       type="text"
@@ -152,12 +152,12 @@ const Search = ({ value, onChange, onSubmit, children }) =>
     </button>
   </form>
 
+
 const largeColumn = { width: '40%', };
 const midColumn = { width: '30%', };
 const smallColumn = { width: '10%', };
 
-
-const Table = ({ list, onDismiss }) =>
+export const Table = ({ list, onDismiss }) =>
   <div className="table">
     {list.map(item =>
       <div key={item.objectID} className="table-row">
@@ -184,7 +184,7 @@ const Table = ({ list, onDismiss }) =>
     )}
   </div>
 
-const Button = ({ onClick, className, children }) =>
+export const Button = ({ onClick, className, children }) =>
   <button
     onClick={onClick}
     className={className}
