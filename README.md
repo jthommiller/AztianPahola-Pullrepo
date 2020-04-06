@@ -1,4 +1,5 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is built and published to [GitPages](https://aztianpahola.github.io/Learning-React/) through Travis-CI.
 
 ## Available Scripts
 
