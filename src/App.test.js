@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import App, {Search, Table, Button} from './App';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 
 configure({ adapter: new Adapter() });
 
@@ -23,5 +23,16 @@ describe('App', () => {
 
   test('Creates Table', () => {
     expect(wrapper.find(Table).length).toEqual(1);
+  })
+});
+
+//Additional Coverage Tests - James
+describe('Coverage', () => {
+  const wrapper = mount(<App/>);
+  test('Check Table Button Text Is Correct', () => {
+    expect(wrapper.find(Button).text()).toEqual('More');
+  });
+  test('Check Search Button Text Is Correct', () => {
+    expect(wrapper.find(Search).text()).toEqual('Search');
   })
 });
