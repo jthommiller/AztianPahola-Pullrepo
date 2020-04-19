@@ -4,6 +4,9 @@ node_js:
 cache:
   directories:
   - node_modules
+
+install:
+  - npm install universal-cookies --save
 script:
   - npm test
   - npm run build
