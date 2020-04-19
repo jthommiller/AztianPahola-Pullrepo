@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import './App.css';
+import Cookies from 'universal-cookie';
 
 const DEFAULT_QUERY = 'redux';
 const DEFAULT_HPP = '100';
@@ -11,14 +12,18 @@ const PARAM_SEARCH = 'query=';
 const PARAM_PAGE = 'page=';
 const PARAM_HPP = 'hitsPerPage=';
 
+const cookies = new Cookies();
+
 class App extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
+      cookie: cookies,
       results: null,
       searchKey: '',
-      searchTerm: DEFAULT_QUERY,
+      searchTerm: cookies.get('savedSearch'),
       error: null,
     };
 
@@ -60,7 +65,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { searchTerm } = this.state;
+    const { cookie, searchTerm } = this.state;
+    if(typeof (cookie.get('savedSearch')) == 'undefined'){
+      const searchTerm = DEFAULT_QUERY;
+    }
+    else{
+      const searchTerm = cookie.get('savedSearch');
+    }
     this.setState({ searchKey: searchTerm });
     this.fetchSearchTopStories(searchTerm);
 
@@ -83,8 +94,9 @@ class App extends Component {
   }
 
   onSearchSubmit(event) {
-    const { searchTerm } = this.state;
+    const { searchTerm, cookie } = this.state;
     this.setState({ searchKey: searchTerm });
+    cookie.set('savedSearch', searchTerm, { path: '/' });
 
     if (this.needsToSearchTopStories(searchTerm)) {
       this.fetchSearchTopStories(searchTerm);
@@ -92,8 +104,6 @@ class App extends Component {
 
     event.preventDefault();
   }
-
-
 
   render() {
     const { searchTerm, results, searchKey, error } = this.state;
@@ -110,7 +120,8 @@ class App extends Component {
           <Search
             onChange={this.onSearchChange}
             value={searchTerm}
-            onSubmit={this.onSearchSubmit}>
+            onSubmit={this.onSearchSubmit}
+            >
             Search
           </Search>
         </div>
@@ -133,7 +144,7 @@ class App extends Component {
 }
 
 export const Search = ({ value, onChange, onSubmit, children }) =>
-  <form onSubmit={onSubmit}>
+  <form onSubmit={onSubmit} >
     <input
       type="text"
       onChange={onChange}
