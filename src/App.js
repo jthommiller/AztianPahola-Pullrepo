@@ -23,7 +23,7 @@ class App extends Component {
       cookie: cookies,
       results: null,
       searchKey: '',
-      searchTerm: cookies.get('savedSearch'),
+      searchTerm: cookies.get('savedSearch') || DEFAULT_QUERY,
       error: null,
     };
 
@@ -65,13 +65,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { cookie, searchTerm } = this.state;
-    if(typeof (cookie.get('savedSearch')) == 'undefined'){
-      const searchTerm = DEFAULT_QUERY;
-    }
-    else{
-      const searchTerm = cookie.get('savedSearch');
-    }
+    const { searchTerm } = this.state;
     this.setState({ searchKey: searchTerm });
     this.fetchSearchTopStories(searchTerm);
 
