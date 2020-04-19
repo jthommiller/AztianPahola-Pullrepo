@@ -6,7 +6,8 @@ cache:
   - node_modules
 
 install:
-  - npm install universal-cookies --save
+  - npm install universal-cookie
+
 script:
   - npm test
   - npm run build
